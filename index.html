@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#08121f" />
+  <title>高维文明观测员</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-theme="nebula">
+  <div class="sticker sticker-a">🪐</div>
+  <div class="sticker sticker-b">🔭</div>
+  <div class="sticker sticker-c">✨</div>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="badge">高维空间文明观测站</span>
+        <h1>高维文明观测员</h1>
+        <p class="subtle">
+          记录学习 / 工作时长，把现实时间投射成一颗星球与文明的演化史。
+        </p>
+      </div>
+
+      <div class="header-actions desktop-only">
+        <button class="btn btn-ghost nav-button" data-nav="main">主控台</button>
+        <button class="btn btn-ghost nav-button" data-nav="report">观测站</button>
+        <button class="btn btn-ghost nav-button" data-nav="settings">设置</button>
+      </div>
+    </header>
+
+    <section class="grid-secondary">
+      <div class="card stat">
+        <span>现实时间</span>
+        <strong id="nowTime">--</strong>
+      </div>
+      <div class="card stat">
+        <span>累计总观测时长</span>
+        <strong id="lifetimeHours">0.00 小时</strong>
+      </div>
+      <div class="card stat">
+        <span>当前星球累计时长</span>
+        <strong id="worldHours">0.00 小时</strong>
+      </div>
+    </section>
+
+    <section id="setupView" class="card hidden">
+      <div class="section-head">
+        <div>
+          <h2>初始化观测对象</h2>
+          <p class="subtle">
+            首次进入或观测对象灭绝后，需要重新建立档案。你的累计总观测时长会保留。
+          </p>
+        </div>
+        <span class="badge">首次 / 重开</span>
+      </div>
+
+      <p id="setupNotice" class="notice hidden"></p>
+
+      <div class="setup-columns">
+        <div>
+          <h3>选择星体类型</h3>
+          <div class="choice-grid">
+            <label class="choice-card">
+              <input type="radio" name="planetType" value="rock" checked />
+              <div class="choice-body">
+                <div class="choice-title">🪨 岩石行星</div>
+                <p>演化速度中等，文明诞生概率高，时间换算梯度平稳。</p>
+              </div>
+            </label>
+
+            <label class="choice-card">
+              <input type="radio" name="planetType" value="gas" />
+              <div class="choice-body">
+                <div class="choice-title">☁️ 气态行星</div>
+                <p>前期缓慢，后期可能出现漂浮城市、气态生命或高空文明。</p>
+              </div>
+            </label>
+
+            <label class="choice-card">
+              <input type="radio" name="planetType" value="ice" />
+              <div class="choice-body">
+                <div class="choice-title">🧊 冰巨星</div>
+                <p>环境恶劣但韧性高，若活下来，文明通常更顽强。</p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <h3>选择重点观测物种</h3>
+          <div class="choice-grid">
+            <label class="choice-card">
+              <input type="radio" name="speciesFocus" value="carbon" checked />
+              <div class="choice-body">
+                <div class="choice-title">🧬 碳基生物</div>
+                <p>文明路径清晰，原始、农业、工业、信息、星际阶段明显。</p>
+              </div>
+            </label>
+
+            <label class="choice-card">
+              <input type="radio" name="speciesFocus" value="silicon" />
+              <div class="choice-body">
+                <div class="choice-title">💎 硅基生物</div>
+                <p>更容易出现晶体神经、机械文明与异常稳定结构。</p>
+              </div>
+            </label>
+
+            <label class="choice-card">
+              <input type="radio" name="speciesFocus" value="ocean" />
+              <div class="choice-body">
+                <div class="choice-title">🌊 海洋生物</div>
+                <p>文明可能起源于深海热泉、洋脊裂谷与潮汐网络。</p>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="setup-footer">
+        <p class="subtle" id="setupPreview">
+          默认会用岩石行星 + 碳基生物建立你的第一颗观测星球。
+        </p>
+        <button class="btn btn-primary" id="createWorldButton">建立观测档案</button>
+      </div>
+    </section>
+
+    <section id="mainView" class="grid-main hidden">
+      <div class="card">
+        <div class="section-head">
+          <div>
+            <h2>主控台</h2>
+            <p class="subtle">开始 / 暂停计时，累积现实世界的学习或工作时长。</p>
+          </div>
+          <span class="badge" id="statusBadge">待机中</span>
+        </div>
+
+        <div class="meter-row">
+          <div>
+            <span class="label">上次离开至今</span>
+            <strong id="offlineDuration">首次进入，暂无离线记录</strong>
+          </div>
+          <div>
+            <span class="label">待返回观测站结算</span>
+            <strong id="pendingHours">0 分钟</strong>
+          </div>
+        </div>
+
+        <div class="timer-panel">
+          <div class="timer-number" id="sessionTimer">00:00:00</div>
+          <p class="subtle" id="timerHint">当前在线观测尚未开始</p>
+
+          <div class="button-row">
+            <button class="btn btn-primary" id="startButton">▶ 开始观测</button>
+            <button class="btn btn-ghost" id="pauseButton">⏸ 暂停观测</button>
+            <button class="btn btn-secondary" id="stationButton">🔭 返回观测站</button>
+          </div>
+        </div>
+
+        <div class="progress-block">
+          <div class="section-head">
+            <div>
+              <h3 id="stageName">星球诞生</h3>
+              <p class="subtle" id="stageDescription">无生命，仅地质活动与大气形成。</p>
+            </div>
+            <strong id="planetTimeRule">现实 2h = 1 亿年</strong>
+          </div>
+
+          <div class="progress">
+            <span id="stageProgressBar"></span>
+          </div>
+          <p class="subtle" id="stageProgressText">距离下一阶段还需 5 小时。</p>
+        </div>
+      </div>
+
+      <div class="side-stack">
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2>当前观测对象</h2>
+              <p class="subtle">如果观测到灭绝，你需要重新选择对象，但总时长不会清零。</p>
+            </div>
+          </div>
+
+          <div class="profile-grid">
+            <div class="profile-item">
+              <span class="label">星体类型</span>
+              <strong id="planetValue">-</strong>
+            </div>
+
+            <div class="profile-item">
+              <span class="label">重点物种</span>
+              <strong id="speciesValue">-</strong>
+            </div>
+
+            <div class="profile-item">
+              <span class="label">观测员生涯起点</span>
+              <strong id="observerSince">-</strong>
+            </div>
+
+            <div class="profile-item">
+              <span class="label">当前状态</span>
+              <strong id="aliveState">-</strong>
+            </div>
+          </div>
+
+          <div class="traits" id="traitTags"></div>
+          <div class="note-panel" id="branchNotes"></div>
+        </div>
+
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2>最近观测摘要</h2>
+              <p class="subtle">简报、关键选项与毁灭记录会保留在这里。</p>
+            </div>
+          </div>
+          <div class="log-list" id="recentLog"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reportView" class="card hidden">
+      <div class="section-head">
+        <div>
+          <h2>观测简报</h2>
+          <p class="subtle" id="reportStageMeta">返回观测站后，这里会生成新的世界变化。</p>
+        </div>
+        <span class="badge" id="reportTypeBadge">待命中</span>
+      </div>
+
+      <div class="report-hero">
+        <div class="report-icon" id="reportIcon">🔭</div>
+        <div>
+          <h3 id="reportTitle">暂无新简报</h3>
+          <p class="subtle" id="reportMeta">开始计时、暂停或离线回来后，再返回观测站查看。</p>
+        </div>
+      </div>
+
+      <div class="report-body" id="reportText">观测站仍在监听星海。</div>
+      <div class="option-list" id="reportOptions"></div>
+
+      <div class="button-row">
+        <button class="btn btn-primary" id="reportContinueButton">返回主控台</button>
+        <button class="btn btn-danger hidden" id="reportRestartButton">重新选择观测对象</button>
+      </div>
+    </section>
+
+    <section id="settingsView" class="card hidden">
+      <div class="section-head">
+        <div>
+          <h2>设置</h2>
+          <p class="subtle">
+            数据默认保存在浏览器本地。清理浏览器缓存会丢失本地记录。
+          </p>
+        </div>
+      </div>
+
+      <div class="settings-grid">
+        <div class="setting-item">
+          <h3>界面主题</h3>
+          <p class="subtle" id="themeLabel">当前主题：深空观测站</p>
+          <div class="button-row">
+            <button class="btn btn-ghost" id="themeToggleButton">切换主题</button>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <h3>重置当前星球</h3>
+          <p class="subtle">仅清空当前星球，保留观测员累计总时长与首次使用时间。</p>
+          <div class="button-row">
+            <button class="btn btn-danger" id="resetWorldButton">重新选择星球</button>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <h3>清空全部数据</h3>
+          <p class="subtle">删除本地全部记录，包括总时长、世界线与简报历史。</p>
+          <div class="button-row">
+            <button class="btn btn-danger" id="clearAllButton">彻底清空</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="mobile-nav">
+      <button class="btn btn-ghost nav-button" data-nav="main">主控台</button>
+      <button class="btn btn-ghost nav-button" data-nav="report">观测站</button>
+      <button class="btn btn-ghost nav-button" data-nav="settings">设置</button>
+    </nav>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
